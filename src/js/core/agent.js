@@ -1,4 +1,4 @@
-define(['CodeMirror'], function (CodeMirror) {
+define([], function () {
   if ('function' !== typeof Array.prototype.reduce) {
     /**
      * Array.prototype.reduce fallback
@@ -35,8 +35,7 @@ define(['CodeMirror'], function (CodeMirror) {
     bMac: navigator.appVersion.indexOf('Mac') > -1,
     bMSIE: navigator.userAgent.indexOf('MSIE') > -1,
     bFF: navigator.userAgent.indexOf('Firefox') > -1,
-    jqueryVersion: parseFloat($.fn.jquery),
-    bCodeMirror: !!CodeMirror
+    jqueryVersion: parseFloat($.fn.jquery)
   };
 
   return agent;
