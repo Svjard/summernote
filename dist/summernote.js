@@ -6,18 +6,18 @@
  * Copyright 2013 Alan Hong. and outher contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2014-02-23T06:42Z
+ * Date: 2014-03-04T00:20Z
  */
 (function (factory) {
   /* global define */
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['jquery', 'codemirror'], factory);
+    define(['jquery'], factory);
   } else {
     // Browser globals: jQuery, CodeMirror
-    factory(window.jQuery, window.CodeMirror);
+    factory(window.jQuery);
   }
-}(function ($, CodeMirror) {
+}(function ($) {
   
 
 
@@ -57,8 +57,7 @@
     bMac: navigator.appVersion.indexOf('Mac') > -1,
     bMSIE: navigator.userAgent.indexOf('MSIE') > -1,
     bFF: navigator.userAgent.indexOf('Firefox') > -1,
-    jqueryVersion: parseFloat($.fn.jquery),
-    bCodeMirror: !!CodeMirror
+    jqueryVersion: parseFloat($.fn.jquery)
   };
 
   /**
@@ -2292,7 +2291,6 @@
             $editable = oLayoutInfo.editable(),
             $codable = oLayoutInfo.codable();
 
-        var server;
         var cmEditor;
 
         var options = $editor.data('options');
@@ -2380,41 +2378,7 @@
             $codable.height($editable.height());
             toolbar.deactivate($toolbar);
             $codable.focus();
-
-            // activate CodeMirror as codable
-            if (agent.bCodeMirror) {
-              cmEditor = CodeMirror.fromTextArea($codable[0], $.extend({
-                mode: 'text/html',
-                lineNumbers: true
-              }, options.codemirror));
-              var tern = $editor.data('options').codemirror.tern || false;
-              if (tern) {
-                server = new CodeMirror.TernServer(tern);
-                cmEditor.ternServer = server;
-                cmEditor.on('cursorActivity', function (cm) {
-                  server.updateArgHints(cm);
-                });
-              }
-
-              // CodeMirror hasn't Padding.
-              cmEditor.setSize(null, $editable.outerHeight());
-              // autoFormatRange If formatting included
-              if (cmEditor.autoFormatRange) {
-                cmEditor.autoFormatRange({line: 0, ch: 0}, {
-                  line: cmEditor.lineCount(),
-                  ch: cmEditor.getTextArea().value.length
-                });
-              }
-              $codable.data('cmEditor', cmEditor);
-            }
           } else {
-            // deactivate CodeMirror as codable
-            if (agent.bCodeMirror) {
-              cmEditor = $codable.data('cmEditor');
-              $codable.val(cmEditor.getValue());
-              cmEditor.toTextArea();
-            }
-
             $editable.html($codable.val() || dom.emptyPara);
             $editable.height(options.height ? $codable.height() : 'auto');
 

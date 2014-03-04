@@ -1,10 +1,8 @@
 define([
-  'CodeMirror',
   'core/agent', 'core/dom', 'core/async', 'core/key',
   'editing/Style', 'editing/Editor', 'editing/History',
   'module/Toolbar', 'module/Popover', 'module/Handle', 'module/Dialog'
-], function (CodeMirror,
-             agent, dom, async, key,
+], function (agent, dom, async, key,
              Style, Editor, History,
              Toolbar, Popover, Handle, Dialog) {
   /**
@@ -213,7 +211,6 @@ define([
             $editable = oLayoutInfo.editable(),
             $codable = oLayoutInfo.codable();
 
-        var server;
         var cmEditor;
 
         var options = $editor.data('options');
@@ -301,41 +298,7 @@ define([
             $codable.height($editable.height());
             toolbar.deactivate($toolbar);
             $codable.focus();
-
-            // activate CodeMirror as codable
-            if (agent.bCodeMirror) {
-              cmEditor = CodeMirror.fromTextArea($codable[0], $.extend({
-                mode: 'text/html',
-                lineNumbers: true
-              }, options.codemirror));
-              var tern = $editor.data('options').codemirror.tern || false;
-              if (tern) {
-                server = new CodeMirror.TernServer(tern);
-                cmEditor.ternServer = server;
-                cmEditor.on('cursorActivity', function (cm) {
-                  server.updateArgHints(cm);
-                });
-              }
-
-              // CodeMirror hasn't Padding.
-              cmEditor.setSize(null, $editable.outerHeight());
-              // autoFormatRange If formatting included
-              if (cmEditor.autoFormatRange) {
-                cmEditor.autoFormatRange({line: 0, ch: 0}, {
-                  line: cmEditor.lineCount(),
-                  ch: cmEditor.getTextArea().value.length
-                });
-              }
-              $codable.data('cmEditor', cmEditor);
-            }
           } else {
-            // deactivate CodeMirror as codable
-            if (agent.bCodeMirror) {
-              cmEditor = $codable.data('cmEditor');
-              $codable.val(cmEditor.getValue());
-              cmEditor.toTextArea();
-            }
-
             $editable.html($codable.val() || dom.emptyPara);
             $editable.height(options.height ? $codable.height() : 'auto');
 
